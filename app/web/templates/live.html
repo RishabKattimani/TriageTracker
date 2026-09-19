@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Live Camera — TriageTracker{% endblock %}
+{% block content %}
+<section class="hero compact">
+  <h2>Live Camera</h2>
+  <p>Live mode uses the MacBook webcam through the same FramePacket path as file video.</p>
+  <div class="notice" id="camera-help">
+    <p>If the camera is denied or missing, Guided Demo remains available.</p>
+    <p>On macOS: System Settings → Privacy &amp; Security → Camera. Enable this browser or Terminal, then reload.</p>
+  </div>
+  <div class="actions">
+    <button type="button" id="live-start" class="button primary">Start live camera</button>
+    <a class="button secondary" href="/demo">RUN GUIDED DEMO</a>
+    <a class="button secondary" href="/dashboard">Waiting room</a>
+  </div>
+</section>
+<p id="signal-event" class="notice" hidden></p>
+<p id="camera-error" class="notice" hidden></p>
+<section class="detail">
+  <div class="video-pane">
+    <div class="video-toolbar">
+      <button type="button" id="btn-raw" class="button secondary">RAW</button>
+      <button type="button" id="btn-evm" class="button secondary">EVM</button>
+      <span class="viz-only">EVM is visualization only. HR comes from rPPG.</span>
+    </div>
+    <img id="patient-video" alt="Live webcam with facial ROIs" src="/stream/P01">
+  </div>
+  <div class="metrics-pane">
+    <h3 id="detail-title">P01 — live</h3>
+    <dl id="detail-metrics"></dl>
+    <h4>Why flagged</h4>
+    <ul id="why-flagged"><li>No backend alert.</li></ul>
+  </div>
+</section>
+<section class="board" id="patient-board" data-backend-owned="true"></section>
+{% endblock %}

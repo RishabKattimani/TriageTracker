@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Guided Demo — TriageTracker{% endblock %}
+{% block content %}
+<section class="hero compact">
+  <h2>Guided Demo</h2>
+  <p>This path uses a prerecorded file through the same VideoSource → processing chain as live video. No camera permission is required.</p>
+  <p>Physiology, scores, and patient state come from the backend only. This page cannot assign REASSESS.</p>
+  <div class="actions">
+    <button type="button" id="demo-start" class="button primary">Start / restart</button>
+    <button type="button" id="demo-pause" class="button secondary">Pause explanation</button>
+    <button type="button" id="demo-skip" class="button secondary">Skip explanation</button>
+    <a class="button secondary" href="/live">TRY LIVE CAMERA</a>
+  </div>
+  <p id="demo-stage" class="pipeline">Stage 1 / 5</p>
+  <p id="demo-copy">Starting the controlled-change fixture through the real pipeline.</p>
+</section>
+{% if not diagnostics.assets.guided_demo_fixture.present %}
+<div class="notice">
+  <p>Guided-demo fixture is not installed yet.</p>
+  <p>Expected file: <code>{{ diagnostics.assets.guided_demo_fixture.path }}</code></p>
+  <p>Recovery: <code>python scripts/generate_fixtures.py</code> then reload. Values will not be fabricated.</p>
+</div>
+{% endif %}
+<p id="signal-event" class="notice" hidden></p>
+<div id="reassess-popup" class="popup" hidden></div>
+<p class="counts" id="room-counts">6 waiting · 0 requiring reassessment</p>
+<section class="board" id="patient-board" data-backend-owned="true"></section>
+<section class="detail">
+  <div class="video-pane">
+    <div class="video-toolbar">
+      <button type="button" id="btn-raw" class="button secondary">RAW</button>
+      <button type="button" id="btn-evm" class="button secondary">EVM</button>
+      <span class="viz-only">EVM is visualization only.</span>
+    </div>
+    <img id="patient-video" alt="Controlled-change fixture with ROIs" src="/stream/P04">
+  </div>
+  <div class="metrics-pane">
+    <h3 id="detail-title">P04 — controlled-change fixture</h3>
+    <dl id="detail-metrics"></dl>
+    <h4>Why flagged</h4>
+    <ul id="why-flagged"><li>Waiting for backend state.</li></ul>
+  </div>
+</section>
+{% endblock %}

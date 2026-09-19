@@ -1,0 +1,13 @@
+{
+  "kind": "synthetic_pulse",
+  "description": "Synthetic skin-tone patch with optically modulated pulse. Not a clinical recording.",
+  "baseline_bpm": 72,
+  "changed_bpm": 110,
+  "change_at_seconds": 28.0,
+  "skin_patch": {
+    "x": 0.22,
+    "y": 0.12,
+    "w": 0.56,
+    "h": 0.7
+  }
+}

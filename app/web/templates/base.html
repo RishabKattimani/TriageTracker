@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TriageTracker{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">TriageTracker</p>
+      <h1>Emergency Waiting Room</h1>
+    </div>
+    <p class="safety">Decision support only. It does not diagnose or replace clinical triage.</p>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>Prototype thresholds. No fabricated measurements. Backend owns patient state.</p>
+  </footer>
+  <script src="/static/app.js" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

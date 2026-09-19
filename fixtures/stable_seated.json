@@ -1,0 +1,11 @@
+{
+  "kind": "synthetic_pulse",
+  "description": "Synthetic stable pulse fixture. Not a seated-patient recording.",
+  "baseline_bpm": 72,
+  "skin_patch": {
+    "x": 0.22,
+    "y": 0.12,
+    "w": 0.56,
+    "h": 0.7
+  }
+}

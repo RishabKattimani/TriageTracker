@@ -12,6 +12,7 @@ from fastapi.templating import Jinja2Templates
 from app import config
 from app.clinic import clinic
 from app.diagnostics import collect_diagnostics
+from app.web.product_fixtures import contract_samples, product_fixture_snapshot
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(config.TEMPLATES_DIR))
@@ -59,6 +60,26 @@ def dashboard(request: Request) -> HTMLResponse:
 @router.get("/api/patients")
 def patients() -> dict:
     return clinic.snapshot()
+
+
+@router.get("/api/product-fixtures")
+def product_fixtures() -> dict:
+    """Contract-valid samples for product QA. Does not set live patient state."""
+    return {
+        "type": "product-fixtures",
+        "samples": contract_samples(),
+        "snapshot": product_fixture_snapshot(),
+        "note": "Frontend must render these. It must not assign REASSESS.",
+    }
+
+
+@router.post("/api/session/reset")
+def reset_session() -> JSONResponse:
+    """Restart guided-demo processing. Does not invent measurements."""
+    result = clinic.start_demo()
+    result["reset"] = True
+    status = 200 if result.get("ok") else 409
+    return JSONResponse(result, status_code=status)
 
 
 @router.post("/api/session/start")

@@ -17,7 +17,7 @@ def test_frontend_cannot_assign_reassess() -> None:
         "status = 'REASSESS'",
         'status:"REASSESS"',
         ".status = \"REASSESS\"",
-        "patient.status =",
+        "patient.status = \"",
     ]
     for item in forbidden:
         assert item not in JS

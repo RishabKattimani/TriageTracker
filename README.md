@@ -31,6 +31,8 @@ Optional:
 
 Then use **RUN GUIDED DEMO** (works without a camera) or **TRY LIVE CAMERA**.
 
+Judge path: `./run.sh` → homepage (15 seconds) → **RUN GUIDED DEMO** → wait for backend `REASSESS` on P04 → **Why flagged** → optional **TRY LIVE CAMERA**.
+
 Most reliable demo path:
 
 1. `./run.sh`

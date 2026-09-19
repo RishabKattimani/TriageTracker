@@ -106,3 +106,10 @@ code { background: #efe8dc; padding: 0.1rem 0.3rem; border-radius: 4px; }
   border-color: var(--reassess);
   background: #fff6f1;
 }
+.in-15s { padding-left: 1.2rem; color: var(--muted); }
+.badge.INITIALIZING, .badge.BASELINING { background: #e4edf1; }
+.badge.STABLE { background: #dceee4; }
+.proof { margin-top: 0.8rem; }
+#tech-proof { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 0.7rem; }
+#tech-proof dt { color: var(--muted); font-size: 0.8rem; }
+#tech-proof dd { margin: 0 0 0.35rem; }

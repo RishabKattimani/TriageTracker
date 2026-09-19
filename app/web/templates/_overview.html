@@ -1,0 +1,26 @@
+<section class="overview">
+  <aside class="queue" aria-label="Patients requiring attention">
+    <h2>Attention</h2>
+    <section class="queue-block">
+      <h3>Watching</h3>
+      <div id="watching-list"><p class="queue-empty">No patients currently being verified.</p></div>
+    </section>
+    <section class="queue-block">
+      <h3>Reassess</h3>
+      <div id="reassess-list"><p class="queue-empty">No patients currently require reassessment.</p></div>
+    </section>
+  </aside>
+  <div class="board-wrap">
+    <div class="board-head">
+      <h2 class="board-title">Waiting room</h2>
+      {% if show_demo_tools %}
+      <div class="demo-bar">
+        <button type="button" id="demo-pause" class="button">PAUSE</button>
+        <button type="button" id="demo-reset" class="button">RESTART</button>
+        <span class="hidden">RESET DEMO</span>
+      </div>
+      {% endif %}
+    </div>
+    <section class="board" id="patient-board" data-backend-owned="true"></section>
+  </div>
+</section>

@@ -1,13 +1,14 @@
 {
   "kind": "synthetic_pulse",
-  "description": "Synthetic skin-tone patch with optically modulated pulse. Not a clinical recording.",
+  "description": "Photorealistic seated-patient plate with injected optical pulse. Not a clinical recording.",
   "baseline_bpm": 72,
   "changed_bpm": 110,
   "change_at_seconds": 28.0,
   "skin_patch": {
-    "x": 0.22,
-    "y": 0.12,
-    "w": 0.56,
-    "h": 0.7
-  }
+    "x": 0.3156171131134033,
+    "y": 0.20443044450547962,
+    "w": 0.26084016799926757,
+    "h": 0.5131025060017904
+  },
+  "plate": "demo_plate.jpg"
 }

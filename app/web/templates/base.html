@@ -4,23 +4,96 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}TriageTracker{% endblock %}</title>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("triage-theme");
+        if (!theme) theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (err) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
+<body data-mode="{% block mode %}STANDARD BOARD{% endblock %}">
   <header class="topbar">
-    <div>
-      <p class="eyebrow">TriageTracker</p>
-      <h1>Emergency Waiting Room</h1>
+    <div class="brand-block">
+      <div class="brand-row">
+        <a class="brand" href="/">TriageTracker</a>
+        <button type="button" id="op-mode" class="mode-pill" aria-expanded="false" aria-controls="real-vs-sim">{% block mode_label %}STANDARD BOARD{% endblock %}</button>
+        <span id="system-health" class="health" role="status">
+          <span class="state-mark STABLE" aria-hidden="true"></span>
+          <span id="health-label">READY</span>
+        </span>
+      </div>
+      <p class="tagline">Contactless reassessment support for patients waiting after triage.</p>
     </div>
-    <p class="safety">Decision support only. It does not diagnose or replace clinical triage.</p>
+    <p class="stat-line" aria-label="Operational summary">
+      <span class="stat"><strong id="count-active">2</strong> active</span>
+      <span class="stat"><strong id="count-demo">4</strong> demo</span>
+      <span class="stat watching"><strong id="count-watching">0</strong> watching</span>
+      <span class="stat attention"><strong id="count-reassess">0</strong> reassess</span>
+    </p>
+    <p id="room-counts" class="hidden">6 waiting · 0 alerts</p>
+    <div class="top-actions">
+      <button type="button" id="theme-toggle" class="button" aria-pressed="false">Dark</button>
+      <button type="button" id="ui-test" class="button">Test UI</button>
+      <a class="button primary" href="/demo">RUN GUIDED DEMO</a>
+      <a class="button" href="/live">TRY LIVE CAMERA</a>
+    </div>
   </header>
+  <aside id="ui-test-banner" class="preview-banner" hidden>
+    <p id="ui-test-copy">UI test preview. Not live Core state.</p>
+    <button type="button" id="ui-test-next" class="button">Next state</button>
+    <button type="button" id="ui-test-exit" class="button">Exit test</button>
+  </aside>
+  <aside id="reassess-alert" class="notice" hidden>
+    <span class="state-mark REASSESS" aria-hidden="true"></span>
+    <div class="notice-copy">
+      <p class="notice-title">REASSESSMENT RECOMMENDED</p>
+      <p id="reassess-body"></p>
+    </div>
+    <button type="button" id="view-patient" class="button primary">View patient</button>
+  </aside>
+  <div id="backend-connection" class="toast" hidden></div>
+  <p id="signal-event" class="toast" hidden></p>
   <main>
     {% block content %}{% endblock %}
   </main>
-  <footer>
-    <p>Prototype thresholds. No fabricated measurements. Backend owns patient state.</p>
+  <footer class="board-footer">
+    <p>Decision-support prototype · Not clinically validated</p>
+    <details class="drawer" id="how-it-works">
+      <summary>HOW IT WORKS</summary>
+      <p>Camera → Facial ROI extraction → rPPG / respiratory signal → Signal-quality validation → Personal baseline → Sustained-change detection → Reassessment recommendation.</p>
+      <p>TriageTracker looks for meaningful physiological change relative to a patient's own baseline rather than diagnosing from a single measurement.</p>
+    </details>
+    <details class="drawer" id="real-vs-sim">
+      <summary>What is real vs simulated?</summary>
+      <p class="use-case">Ordinary-camera physiological change monitoring for emergency waiting rooms.</p>
+      <p><strong>Real</strong></p>
+      <ul>
+        <li>Live camera processing</li>
+        <li>Facial tracking and ROI extraction</li>
+        <li>HR estimation</li>
+        <li>Respiratory-rate attempt</li>
+        <li>Signal-confidence scoring</li>
+        <li>Motion rejection</li>
+        <li>Personal baseline comparison</li>
+        <li>Backend change detection</li>
+        <li>EVM visualization</li>
+      </ul>
+      <p><strong>Simulated</strong></p>
+      <ul>
+        <li>Patient identities</li>
+        <li>Wait times</li>
+        <li>Emergency-department context</li>
+        <li>Four background waiting-room patients</li>
+      </ul>
+      <p class="safety-boundary">Decision support only. It does not diagnose or replace clinical triage.</p>
+    </details>
   </footer>
   <script src="/static/app.js" defer></script>
-  {% block scripts %}{% endblock %}
 </body>
 </html>

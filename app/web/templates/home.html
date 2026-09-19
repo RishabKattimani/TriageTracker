@@ -1,55 +1,24 @@
 {% extends "base.html" %}
 {% block title %}TriageTracker — Waiting-room reassessment{% endblock %}
+{% block mode %}STANDARD BOARD{% endblock %}
+{% block mode_label %}STANDARD BOARD{% endblock %}
 {% block content %}
-<section class="hero">
-  <h2>Triage is a snapshot. Patients keep changing.</h2>
-  <p class="use-case">Ordinary-camera physiological change monitoring for emergency waiting rooms.</p>
-  <div class="actions">
-    <a class="button primary" href="/demo">RUN GUIDED DEMO</a>
-    <a class="button secondary" href="/live">TRY LIVE CAMERA</a>
-    <a class="button secondary" href="/dashboard">Waiting room</a>
-  </div>
-  <ol class="in-15s">
-    <li><strong>Problem:</strong> triage is a snapshot while patients keep changing.</li>
-    <li><strong>Solution:</strong> an ordinary camera watches for a sustained physiological change.</li>
-    <li><strong>Action:</strong> recommend who should be reassessed, with reasons.</li>
-    <li><strong>Safety:</strong> decision support only. It does not diagnose or replace triage.</li>
-  </ol>
-</section>
-
-<section class="pipeline">
-  <p>Camera → HR + RR → Confidence → Personal baseline → Sustained change → Reassessment</p>
-</section>
-
-<section class="explain">
-  <h3>What this prototype does</h3>
-  <p>It watches for a sustained change from a patient-specific baseline and recommends clinician reassessment. It does not assign a triage level or diagnose disease.</p>
-  <p class="safety-boundary">Decision support only. It does not diagnose or replace clinical triage.</p>
-</section>
-
-<details class="panel">
-  <summary>What is real vs simulated?</summary>
-  <ul>
-    <li><strong>Real:</strong> video ingestion, face tracking, facial ROIs, rPPG heart-rate estimation, respiratory-rate attempt, confidence, motion rejection, baseline, change detection.</li>
-    <li><strong>Simulated:</strong> patient IDs, waiting-room labels, wait times, and some background patient tiles.</li>
-    <li>Guided Demo uses a prerecorded file through the same processing interfaces as live video. It never writes measurements or REASSESS from the UI.</li>
-  </ul>
-</details>
-
-<section class="diagnostics" data-testid="startup-diagnostics">
-  <h3>Startup diagnostics</h3>
+<h1 class="hidden">Triage is a snapshot. Patients keep changing.</h1>
+{% set default_patient = "P04" %}
+{% include "_overview.html" %}
+{% include "_detail.html" %}
+<details class="sr-info hidden" data-testid="startup-diagnostics">
+  <summary>Diagnostics</summary>
   <p>App status: <strong>{{ diagnostics.status }}</strong> · ready={{ diagnostics.ready }} · {{ diagnostics.version }}</p>
   <p>Python {{ diagnostics.python_version }} {% if diagnostics.python_ok %}ok{% else %}needs 3.11+{% endif %}</p>
   <ul>
     {% for name, present in diagnostics.packages.items() %}
     <li>{{ name }}: {% if present %}installed{% else %}missing{% endif %}</li>
     {% endfor %}
-  </ul>
-  <ul>
     {% for name, info in diagnostics.assets.items() %}
     <li>{{ name }}: {% if info.present %}present{% else %}missing — {{ info.path }}{% endif %}</li>
     {% endfor %}
   </ul>
   <p>{{ diagnostics.camera.message }}</p>
-</section>
+</details>
 {% endblock %}

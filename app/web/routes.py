@@ -82,6 +82,12 @@ def reset_session() -> JSONResponse:
     return JSONResponse(result, status_code=status)
 
 
+@router.post("/api/session/pause")
+def pause_session(paused: bool = Query(True)) -> JSONResponse:
+    """Pause or resume the guided-demo file loop. Does not invent measurements."""
+    return JSONResponse(clinic.set_demo_paused(paused))
+
+
 @router.post("/api/session/start")
 def start_session(mode: str = Query(..., pattern="^(demo|live)$")) -> JSONResponse:
     if mode == "demo":

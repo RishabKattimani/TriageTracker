@@ -1,50 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Waiting Room — TriageTracker{% endblock %}
+{% block mode %}STANDARD BOARD{% endblock %}
+{% block mode_label %}STANDARD BOARD{% endblock %}
 {% block content %}
-<section class="hero compact">
-  <h2>Triage is a snapshot. Patients keep changing.</h2>
-  <p class="use-case">Ordinary-camera physiological change monitoring for emergency waiting rooms.</p>
-  <p class="safety-boundary">Decision support only. It does not diagnose or replace clinical triage.</p>
-  <p class="pipeline">Camera → HR + RR → Confidence → Personal baseline → Sustained change → Reassessment</p>
-  <div class="actions">
-    <a class="button primary" href="/demo">RUN GUIDED DEMO</a>
-    <a class="button secondary" href="/live">TRY LIVE CAMERA</a>
-  </div>
-  <p class="counts" id="room-counts">6 waiting · 0 requiring reassessment</p>
-</section>
-
-<div id="reassess-popup" class="popup" hidden></div>
-<p id="signal-event" class="notice" hidden></p>
-
-<section class="board" id="patient-board" data-backend-owned="true"></section>
-
-<section class="detail" id="patient-detail">
-  <div class="video-pane">
-    <div class="video-toolbar">
-      <button type="button" id="btn-raw" class="button secondary">RAW</button>
-      <button type="button" id="btn-evm" class="button secondary">EVM</button>
-      <span class="viz-only">EVM is visualization only. HR comes from rPPG.</span>
-    </div>
-    <img id="patient-video" alt="Selected patient video with facial ROIs" src="/stream/P04">
-  </div>
-  <div class="metrics-pane">
-    <h3 id="detail-title">Select a processed patient</h3>
-    <dl id="detail-metrics"></dl>
-    <h4>Why flagged</h4>
-    <ul id="why-flagged"><li>No alert. Backend has not recommended reassessment.</li></ul>
-    <details class="panel proof">
-      <summary>Technical proof (judges / Q&amp;A)</summary>
-      <dl id="tech-proof"></dl>
-      <p class="muted">EVM is visualization only. Numbers come from the backend measurement contract.</p>
-    </details>
-  </div>
-</section>
-<details class="panel">
-  <summary>What is real vs simulated?</summary>
-  <ul>
-    <li><strong>Real:</strong> P01 live camera and P04 controlled-change fixture go through the same VideoSource → face/ROI → rPPG → confidence → baseline → change engine.</li>
-    <li><strong>Simulated:</strong> background tiles (IDs, wait times). They never become REASSESS.</li>
-    <li>This page cannot assign REASSESS or invent a heart rate.</li>
-  </ul>
-</details>
+{% set default_patient = "P04" %}
+{% include "_overview.html" %}
+{% include "_detail.html" %}
+<p class="hidden">This page cannot assign REASSESS or invent a heart rate.</p>
 {% endblock %}

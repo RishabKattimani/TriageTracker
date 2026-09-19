@@ -1,0 +1,34 @@
+<div id="patient-modal" class="modal" hidden aria-hidden="true">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <section id="patient-detail" class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button type="button" id="modal-close" class="button modal-close">Close</button>
+    <p id="decision-lead" class="decision-lead"></p>
+    <h2 id="detail-title">Patient {{ default_patient[1:] | int }}</h2>
+    <p id="decision-sub" class="decision-sub"></p>
+    <div class="compare" id="compare-block"></div>
+    <dl id="detail-metrics"></dl>
+    <div class="detail-screen">
+      <div class="detail-col visual">
+        <h3>Visual proof</h3>
+        <p class="chain">camera → facial ROI → signal → quality → baseline → sustained change → reassessment</p>
+        <div class="video-toolbar">
+          <button type="button" id="btn-raw">RAW</button>
+          <button type="button" id="btn-evm">EVM</button>
+          <span id="evm-note" class="evm-note" hidden>Visualization only</span>
+        </div>
+        <img id="patient-video" alt="Selected patient">
+      </div>
+      <div class="detail-col reason">
+        <h3 id="reason-heading">Why this patient was flagged</h3>
+        <p class="hidden">Why flagged</p>
+        <p id="reason-lead"></p>
+        <dl id="reason-metrics"></dl>
+        <ul id="why-flagged"><li>—</li></ul>
+        <details class="proof">
+          <summary>Technical proof</summary>
+          <dl id="tech-proof"></dl>
+        </details>
+      </div>
+    </div>
+  </section>
+</div>

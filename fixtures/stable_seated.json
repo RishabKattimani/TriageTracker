@@ -1,11 +1,12 @@
 {
   "kind": "synthetic_pulse",
-  "description": "Synthetic stable pulse fixture. Not a seated-patient recording.",
+  "description": "Photorealistic plate with a stable injected 72 BPM pulse. Not a wearable recording.",
   "baseline_bpm": 72,
   "skin_patch": {
-    "x": 0.22,
-    "y": 0.12,
-    "w": 0.56,
-    "h": 0.7
-  }
+    "x": 0.3156171131134033,
+    "y": 0.20443044450547962,
+    "w": 0.26084016799926757,
+    "h": 0.5131025060017904
+  },
+  "plate": "demo_plate.jpg"
 }

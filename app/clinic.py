@@ -58,6 +58,8 @@ class Clinic:
         self._threads: list[threading.Thread] = []
         self._live_enabled = False
         self._demo_enabled = False
+        self._demo_paused = False
+        self._demo_epoch = 0
         self.last_event: str | None = None
 
     def start(self) -> None:
@@ -80,6 +82,8 @@ class Clinic:
         self.demo_error = None
         with self.lock:
             self.monitors[config.CONTROLLED_CHANGE_PATIENT_ID].reset()
+            self._demo_paused = False
+            self._demo_epoch += 1
         if not self._demo_enabled:
             self._demo_enabled = True
             thread = threading.Thread(target=self._run_file_loop, name="p04-demo", daemon=True)
@@ -94,6 +98,10 @@ class Clinic:
             self._threads.append(thread)
             thread.start()
         return {"ok": True, "patient_id": config.LIVE_PATIENT_ID}
+
+    def set_demo_paused(self, paused: bool) -> dict[str, Any]:
+        self._demo_paused = bool(paused)
+        return {"ok": True, "paused": self._demo_paused}
 
     def snapshot(self) -> dict[str, Any]:
         with self.lock:
@@ -120,15 +128,23 @@ class Clinic:
             }
             patients.sort(key=lambda item: (rank.get(item["status"], 9), -(item.get("change_score") or 0)))
             reassess = [p for p in patients if p["status"] == PatientStatus.REASSESS.value]
+            watching = [p for p in patients if p["status"] == PatientStatus.CHANGE_DETECTED.value]
             event = self.last_event
             self.last_event = None
             return {
                 "type": "snapshot",
                 "waiting": len(patients),
                 "reassess_count": len(reassess),
+                "watching_count": len(watching),
                 "patients": patients,
                 "camera_error": self.camera_error,
                 "demo_error": self.demo_error,
+                "demo_paused": self._demo_paused,
+                "thresholds": {
+                    "baseline_seconds": config.BASELINE_DURATION_SECONDS,
+                    "change_persistence_seconds": config.CHANGE_DETECTED_PERSISTENCE_SECONDS,
+                    "reassess_persistence_seconds": config.REASSESS_PERSISTENCE_SECONDS,
+                },
                 "event": event,
                 "note": "Backend owns patient state. Frontend must not assign REASSESS.",
             }
@@ -150,7 +166,15 @@ class Clinic:
             if self.monitors[patient_id].machine.last_event:
                 self.last_event = self.monitors[patient_id].machine.last_event
 
-    def _run_source(self, patient_id: str, source: VideoSource, processor: FrameProcessor, pace: bool) -> None:
+    def _run_source(
+        self,
+        patient_id: str,
+        source: VideoSource,
+        processor: FrameProcessor,
+        pace: bool,
+        *,
+        epoch: int | None = None,
+    ) -> None:
         evm_engine = self.evm[patient_id]
         try:
             source.open()
@@ -158,6 +182,12 @@ class Clinic:
             last = time.time()
             for packet in source.frames():
                 if self._stop.is_set():
+                    break
+                if epoch is not None and epoch != self._demo_epoch:
+                    break
+                while self._demo_paused and epoch is not None and epoch == self._demo_epoch and not self._stop.is_set():
+                    time.sleep(0.08)
+                if self._stop.is_set() or (epoch is not None and epoch != self._demo_epoch):
                     break
                 obs = processor.process(packet)
                 with self.lock:
@@ -177,9 +207,16 @@ class Clinic:
         path = config.GUIDED_DEMO_FIXTURE
         meta = load_fixture_meta(path)
         while not self._stop.is_set() and self._demo_enabled:
+            epoch = self._demo_epoch
             source = FileVideoSource(path, source_id="fixture-P04", loop=False)
             processor = FrameProcessor(live=False, fixture_meta=meta)
-            self._run_source(config.CONTROLLED_CHANGE_PATIENT_ID, source, processor, pace=True)
+            self._run_source(
+                config.CONTROLLED_CHANGE_PATIENT_ID,
+                source,
+                processor,
+                pace=True,
+                epoch=epoch,
+            )
             time.sleep(0.4)
 
     def _run_live_loop(self) -> None:

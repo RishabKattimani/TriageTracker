@@ -8,7 +8,7 @@
 - FastAPI + `./run.sh` + `/health` + homepage
 - Webcam and MP4 share `FramePacket`
 - Face/ROI/rPPG/HR/quality/baseline/scorer/state machine (Core, handed to Ranveer)
-- Six-patient dashboard, why-flagged, popup, Guided Demo / Live pages
+- Unified waiting-room board: header mode + READY/RECONNECTING, derived 2 ACTIVE / 4 DEMO / WATCHING / REASSESS counts, source-labeled cards, WATCHING vs REASSESS attention queues, decision-first modal, How it works + Real vs Simulated drawers, Guided Demo PAUSE/RESTART
 - Synthetic fixtures via `python scripts/generate_fixtures.py`
 
 ## Tests
